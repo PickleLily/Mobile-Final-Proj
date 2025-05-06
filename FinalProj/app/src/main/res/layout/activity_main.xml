@@ -25,4 +25,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start Game"/>
+
+    <Button
+        android:id="@+id/local_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Local Leaderboard"/>
+
+    <Button
+        android:id="@+id/global_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Global Leaderboard"/>
 </LinearLayout>
