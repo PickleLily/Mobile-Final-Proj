@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayout"
+    android:background="@color/bground_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -14,15 +15,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
+
     <ProgressBar
         android:id="@+id/timerProgress"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_alignParentTop="true"
-        android:progressDrawable="@drawable/progress_drawable"
         android:max="3000"
-        android:progress="3000"/>
+        android:progress="3000"
+        android:progressTint="@color/timer_green" />
 
     <Button
         android:id="@+id/actionButton"

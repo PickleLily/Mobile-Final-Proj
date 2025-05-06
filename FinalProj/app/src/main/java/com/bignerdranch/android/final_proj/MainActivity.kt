@@ -1,5 +1,11 @@
 package com.bignerdranch.android.final_proj
 
+import android.content.Context
+import android.content.res.ColorStateList
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -9,16 +15,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.bignerdranch.android.final_proj.ui.theme.FinalProjTheme
+import androidx.core.content.ContextCompat
+import kotlin.math.sqrt
 
 class MainActivity : ComponentActivity() {
 
@@ -26,9 +25,14 @@ class MainActivity : ComponentActivity() {
     private lateinit var scoreText: TextView
     private var score = 0
     private var timer: CountDownTimer? = null
-    private val actions = listOf("BOP IT", "TWIST IT", "PULL IT")
+    private val actions = listOf("BOP IT", "TWIST IT", "PULL IT", "DON'T BOP IT", "SHAKE IT")
     private var timeLeftMillis: Long = 0L
     private lateinit var timerProgress: ProgressBar
+    private lateinit var sensorManager: SensorManager
+    private var accelCurrent = 0f
+    private var accelLast = 0f
+    private var shake = 0f
+    private var expectingShake = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +43,49 @@ class MainActivity : ComponentActivity() {
         timerProgress = findViewById(R.id.timerProgress)
         timerProgress.max = 3000
         timerProgress.progress = 3000
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelCurrent = SensorManager.GRAVITY_EARTH
+        accelLast = SensorManager.GRAVITY_EARTH
 
         startGame()
         enableEdgeToEdge()
+    }
+
+    private val sensorListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+
+            accelLast = accelCurrent
+            accelCurrent = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+            val delta = accelCurrent - accelLast
+            shake = shake * 0.9f + delta
+
+            if (expectingShake && shake > 12) {  // Shake threshold
+                expectingShake = false
+                timer?.cancel()
+                val maxTime = 3000L
+                val bonus = (timeLeftMillis.toDouble() / maxTime * 10).toInt()
+                score += bonus.coerceAtLeast(1)
+                scoreText.text = "Score: $score"
+                showNextAction()
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(sensorListener,
+            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_UI)
+    }
+
+    override fun onPause() {
+        sensorManager.unregisterListener(sensorListener)
+        super.onPause()
     }
 
     private fun startGame() {
@@ -60,27 +104,53 @@ class MainActivity : ComponentActivity() {
 
         actionButton.visibility = View.VISIBLE
 
+        expectingShake = nextAction == "SHAKE IT"
+
         timer?.cancel()
         timer = object : CountDownTimer(3000, 50) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftMillis = millisUntilFinished
                 timerProgress.progress = millisUntilFinished.toInt()
+
+                val fraction = millisUntilFinished.toFloat() / 3000f
+
+                val color = when {
+                    fraction > 0.66f -> ContextCompat.getColor(this@MainActivity, R.color.timer_green)
+                    fraction > 0.33f -> ContextCompat.getColor(this@MainActivity, R.color.timer_yellow)
+                    else -> ContextCompat.getColor(this@MainActivity, R.color.timer_red)
+                }
+
+                timerProgress.progressTintList = ColorStateList.valueOf(color)
             }
+
             override fun onFinish() {
-                timeLeftMillis = 0L
-                endGame()
+                if (actionButton.text.equals("DON'T BOP IT")){
+                    score += 10
+                    scoreText.text = "Score: $score"
+                    showNextAction()
+                }else {
+                    timeLeftMillis = 0L
+                    expectingShake = false
+                    endGame()
+                }
             }
         }.start()
 
         actionButton.setOnClickListener {
             timer?.cancel()
 
-            val maxTime = 3000L
-            val bonus = (timeLeftMillis.toDouble() / maxTime * 10).toInt() // max 10 points
-            score += bonus.coerceAtLeast(1) // ensure at least 1 point
+            if (actionButton.text.equals("DON'T BOP IT") || expectingShake){
+                timeLeftMillis = 0L
+                expectingShake = false
+                endGame()
+            } else {
+                val maxTime = 3000L
+                val bonus = (timeLeftMillis.toDouble() / maxTime * 10).toInt() // max 10 points
+                score += bonus.coerceAtLeast(1) // ensure at least 1 point
 
-            scoreText.text = "Score: $score"
-            showNextAction()
+                scoreText.text = "Score: $score"
+                showNextAction()
+            }
         }
     }
 
