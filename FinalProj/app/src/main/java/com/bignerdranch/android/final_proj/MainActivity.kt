@@ -1,12 +1,7 @@
 package com.bignerdranch.android.final_proj
 
-//import android.app.Activity
 import android.os.Bundle
-//import android.util.Log
-//import android.view.View
-//import androidx.activity.result.contract.ActivityResultContracts
-//import androidx.activity.viewModels
-//import android.content.Intent
+import android.content.Intent
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
@@ -29,19 +24,22 @@ class MainActivity : AppCompatActivity() {
         val globalLeaderboardButton = findViewById<Button>(R.id.global_button)
 
 
-// This should start the game?
+    // This should start the game?
         startButton.setOnClickListener{
-//            ...
-//            val intentStart = Intent(this, GameActivity::class.java)
-//            startActivity(intentStart)
+            val intentStart = Intent(this, GameActivity::class.java)
+            startActivity(intentStart)
         }
-//        this should change screens and display a local leaderboard (aka your top scores)
+
+    // This should change screens and display a local leaderboard (aka your top scores)
         localLeaderboardButton.setOnClickListener{
-//            ...
+            val intentLocal = Intent(this, LocalLeaderboardActivity::class.java)
+            startActivity(intentLocal)
         }
-//        this should change screens and display a global leaderboard (aka the scores of everyone who has played the game!)
+
+    // This should change screens and display a global leaderboard (aka the scores of everyone who has played the game!)
         globalLeaderboardButton.setOnClickListener{
-//            ...
+            val intentGlobal = Intent(this, GlobalLeaderboardActivity::class.java)
+            startActivity(intentGlobal)
         }
         enableEdgeToEdge()
         setContent {
