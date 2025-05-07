@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:background="@color/bground_color"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/actionButton"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:text="PRESS IT"
+        android:textSize="36sp"
+        android:fontFamily="@font/arcadeclassic"
+        android:background="@color/button_color"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/scoreText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/arcadeclassic"
+        android:layout_marginBottom="10dp"
+        android:text="Score: 0"
+        android:textColor="@color/black"
+        android:textSize="36sp" />
+
+    <ProgressBar
+        android:id="@+id/timerProgress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10dp"
+        android:max="3000"
+        android:progress="3000"
+        android:progressTint="@color/timer_green" />
+
+</LinearLayout>
