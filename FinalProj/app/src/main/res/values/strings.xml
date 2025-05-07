@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Final-Proj</string>
+    <string name="global">Global Leaderboard</string>
+    <string name="local">Local Leaderboard</string>
+    <string name="save">Save</string>
+    <string name="output">Stored value will appear here</string>
+    <string name="text">Enter Score</string>
+    <string name="start">Start Game </string>
+    <string name="title">Boopit </string>
+
 </resources>

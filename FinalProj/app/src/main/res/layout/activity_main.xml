@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/game_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+        android:fontFamily="@font/rubikiso_regular"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <!--    This button displays says start game   -->
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start"/>
+
+    <Button
+        android:id="@+id/local_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/local"/>
+
+    <Button
+        android:id="@+id/global_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/global"/>
+
+    <EditText
+        android:id="@+id/inputField"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:autofillHints="creditCardNumber"
+        android:hint="@string/text" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save" />
+
+    <TextView
+        android:id="@+id/outputView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/output" />
+
+</LinearLayout>
