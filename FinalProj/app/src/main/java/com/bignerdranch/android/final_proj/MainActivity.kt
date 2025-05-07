@@ -21,13 +21,20 @@ import kotlin.math.sqrt
 
 class MainActivity : ComponentActivity() {
 
+    // Button structure
     private lateinit var actionButton: Button
+    private val actions = listOf("PRESS IT", "PUSH IT", "TAP IT", "DON'T TAP IT", "SHAKE IT")
+
+    // Score count
     private lateinit var scoreText: TextView
     private var score = 0
-    private var timer: CountDownTimer? = null
-    private val actions = listOf("BOP IT", "TWIST IT", "PULL IT", "DON'T BOP IT", "SHAKE IT")
-    private var timeLeftMillis: Long = 0L
-    private lateinit var timerProgress: ProgressBar
+
+    // Timer
+    private var timer: CountDownTimer? = null // Timer
+    private var timeLeftMillis: Long = 0L // Timer value / countdown
+    private lateinit var timerProgress: ProgressBar // Actual timer display
+
+    // Detection for "Shake it"
     private lateinit var sensorManager: SensorManager
     private var accelCurrent = 0f
     private var accelLast = 0f
@@ -124,13 +131,11 @@ class MainActivity : ComponentActivity() {
             }
 
             override fun onFinish() {
-                if (actionButton.text.equals("DON'T BOP IT")){
+                if (actionButton.text.equals("DON'T TAP IT")){
                     score += 10
                     scoreText.text = "Score: $score"
                     showNextAction()
                 }else {
-                    timeLeftMillis = 0L
-                    expectingShake = false
                     endGame()
                 }
             }
@@ -139,9 +144,7 @@ class MainActivity : ComponentActivity() {
         actionButton.setOnClickListener {
             timer?.cancel()
 
-            if (actionButton.text.equals("DON'T BOP IT") || expectingShake){
-                timeLeftMillis = 0L
-                expectingShake = false
+            if (actionButton.text.equals("DON'T TAP IT") || expectingShake){
                 endGame()
             } else {
                 val maxTime = 3000L
@@ -152,6 +155,7 @@ class MainActivity : ComponentActivity() {
                 showNextAction()
             }
         }
+
     }
 
     private fun moveButtonToRandomPosition() {
@@ -191,6 +195,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun endGame() {
+        timeLeftMillis = 0L
+        expectingShake = false
         actionButton.visibility = View.INVISIBLE
         actionButton.setOnClickListener(null)
         Toast.makeText(this, "Game Over! Score: $score", Toast.LENGTH_LONG).show()
